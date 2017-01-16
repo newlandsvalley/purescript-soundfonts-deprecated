@@ -1,0 +1,20 @@
+{
+  "name": "purescript-soundfonts",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "output"
+  ],
+  "dependencies": {
+    "purescript-prelude": "^2.1.0",
+    "purescript-console": "^2.0.0",
+    "purescript-maybe": "^2.0.1",
+    "purescript-arrays": "^3.1.0",
+    "purescript-integers": "^2.1.0",
+    "purescript-aff": "^2.0.2"
+  },
+  "devDependencies": {
+    "purescript-psci-support": "^2.0.0"
+  }
+}
