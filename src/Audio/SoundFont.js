@@ -36,15 +36,15 @@ var sf = function() {
       getCurrentTime : function(context) {
            return context.currentTime;
       },
-      /* load and decode the soundfont */
-      loadSoundFont : function (context) {
+      /* load and decode the piano soundfont from the local server */
+      loadPianoSoundFont : function (context) {
          return function(dirname) {
            return function() {
-             return sf._loadSoundFont (context, dirname);
+             return sf._loadPianoSoundFont (context, dirname);
            }
          }
        },
-       _loadSoundFont : function (context, dirname) {
+       _loadPianoSoundFont : function (context, dirname) {
            var name = 'acoustic_grand_piano';
            var dir = dirname + '/';
            var extension = null;
@@ -56,6 +56,24 @@ var sf = function() {
            }
            Soundfont.nameToUrl = function (name) { return dir + name + extension }
            Soundfont.loadBuffers(context, name)
+               .then(function (buffers) {
+                 // console.log("buffers:", buffers);
+                 sf.buffers = buffers;
+                 console.log("buffers:", sf.buffers);
+                 return true;
+               })
+      },
+      /* load and decode the soundfont from the reomte server */
+      loadRemoteSoundFont : function (context) {
+         return function(instrument) {
+           return function() {
+             return sf._loadRemoteSoundFont (context, instrument);
+           }
+         }
+       },
+       _loadRemoteSoundFont : function (context, instrument) {
+           Soundfont.nameToUrl = null;
+           Soundfont.loadBuffers(context, instrument)
                .then(function (buffers) {
                  // console.log("buffers:", buffers);
                  sf.buffers = buffers;
@@ -100,5 +118,6 @@ exports.isWebAudioEnabled = sf.isWebAudioEnabled;
 exports.canPlayOgg = sf.canPlayOgg;
 exports.getAudioContext = sf.getAudioContext;
 exports.getCurrentTime = sf.getCurrentTime;
-exports.loadSoundFont = sf.loadSoundFont;
+exports.loadPianoSoundFont = sf.loadPianoSoundFont;
+exports.loadRemoteSoundFont = sf.loadRemoteSoundFont;
 exports.playNote = sf.playNote;

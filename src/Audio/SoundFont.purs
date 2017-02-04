@@ -6,7 +6,8 @@ module Audio.SoundFont
   , isWebAudioEnabled
   , getAudioContext
   , getCurrentTime
-  , loadSoundFont
+  , loadPianoSoundFont
+  , loadRemoteSoundFont
   , playNote
   , playNotes
   ) where
@@ -41,8 +42,11 @@ foreign import getAudioContext
 -- |  Get the audio context's current time
 foreign import getCurrentTime :: AudioContext -> Number
 
--- | load a piano soundfont
-foreign import loadSoundFont :: forall eff. AudioContext -> String -> Eff (loadSoundFont :: LOADFONT | eff) Boolean
+-- | load a piano soundfont from the local server
+foreign import loadPianoSoundFont :: forall eff. AudioContext -> String -> Eff (loadSoundFont :: LOADFONT | eff) Boolean
+
+-- | load a soundfont for a particular instrument from the remote Gleitz Github server
+foreign import loadRemoteSoundFont :: forall eff. AudioContext -> String -> Eff (loadSoundFont :: LOADFONT | eff) Boolean
 
 -- | play a note asynchronously
 -- | return the duration of the note
