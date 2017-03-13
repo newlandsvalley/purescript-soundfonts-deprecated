@@ -1,1 +1,2 @@
 js/*.js linguist-vendored
+examples/basic/dist/soundfonts/*.js linguist-vendored
