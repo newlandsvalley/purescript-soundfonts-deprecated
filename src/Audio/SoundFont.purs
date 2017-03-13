@@ -2,6 +2,7 @@ module Audio.SoundFont
   ( AudioContext
   , AUDIO
   , LOADFONT
+  , MidiNote
   , canPlayOgg
   , isWebAudioEnabled
   , getAudioContext
@@ -17,7 +18,6 @@ import Data.Traversable (sequenceDefault)
 import Data.Maybe (fromMaybe)
 import Data.Array (head, reverse)
 import Control.Monad.Eff (Eff)
-import Audio.Types (MidiNote)
 
 -- |  Audio Context
 foreign import data AudioContext :: *
@@ -27,6 +27,14 @@ foreign import data AUDIO :: !
 
 -- |  Load Font Effect
 foreign import data LOADFONT :: !
+
+-- | A Midi Note
+type MidiNote =
+  { id  :: Int               -- the MIDI pitch number
+  , timeOffset :: Number     -- the time delay in seconds before the note is played
+  , duration :: Number       -- the duration of the note
+  , gain :: Number           -- the volume (between 0 and 1)
+  }
 
 -- | can the browser play ogg format ?
 foreign import canPlayOgg
