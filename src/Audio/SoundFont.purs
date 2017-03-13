@@ -44,6 +44,7 @@ foreign import canPlayOgg
 foreign import isWebAudioEnabled
   :: forall eff. (Eff (au :: AUDIO | eff) Boolean)
 
+-- | get the Audio Context
 foreign import getAudioContext
   :: forall eff. (Eff (au :: AUDIO | eff) AudioContext)
 
