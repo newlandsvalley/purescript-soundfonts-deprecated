@@ -41,7 +41,8 @@ foreign import isWebAudioEnabled
   :: forall eff. (Eff (au :: AUDIO | eff) Boolean)
 
 -- |  Get the audio context's current time
-foreign import getCurrentTime :: Number
+foreign import getCurrentTime
+  :: forall eff. (Eff (au :: AUDIO | eff) Number)
 
 -- | load a piano soundfont from the local server
 foreign import loadPianoSoundFont :: forall eff. String -> Eff (loadSoundFont :: LOADFONT | eff) Boolean
