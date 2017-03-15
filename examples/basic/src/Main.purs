@@ -47,7 +47,7 @@ main = do
     log ("can I play OGG: " <> show playsOgg)
     audioEnabled <- isWebAudioEnabled
     log ("can I play web-audio: " <> show audioEnabled)
-    let time = getCurrentTime
+    time <- getCurrentTime
     log ("current time in audio context: " <> show time)
     loaded <- loadPianoSoundFont "soundfonts"
     log ("piano soundfonts loaded: " <> show loaded)

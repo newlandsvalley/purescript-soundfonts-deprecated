@@ -38,7 +38,7 @@ var sf = function() {
       getCurrentTime : function() {
          sf.establishAudioContext();
          if (sf.context) {
-           return sfcontext.currentTime;
+           return sf.context.currentTime;
          }
          else {
            return 0;
