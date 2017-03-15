@@ -20,7 +20,7 @@ var sf = function() {
       },
       /* Get the audio context */
       establishAudioContext : function() {
-        if (sf.context === null || sf.context === undefined){
+        if (sf.context === null || sf.context === undefined) {
           sf.context = new (window.AudioContext || window.webkitAudioContext)();
         }
       },
@@ -46,6 +46,7 @@ var sf = function() {
       /* load and decode the piano soundfont from the local server */
       loadPianoSoundFont : function(dirname) {
         return function() {
+          establishAudioContext();
           return sf._loadPianoSoundFont (dirname);
         }
        },
@@ -71,7 +72,8 @@ var sf = function() {
       /* load and decode the soundfont from the reomte server */
       loadRemoteSoundFont : function(instrument) {
         return function() {
-             return sf._loadRemoteSoundFont (instrument);
+           establishAudioContext();
+           return sf._loadRemoteSoundFont (instrument);
          }
        },
        _loadRemoteSoundFont : function (instrument) {
