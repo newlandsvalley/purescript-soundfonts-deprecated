@@ -26,7 +26,8 @@ var sf = function() {
       },
       /* is web audio enabled ? */
       isWebAudioEnabled : function() {
-        if (sf.getAudioContext) {
+        sf.establishAudioContext();
+        if (sf.context) {
           return true;
         }
         else {
@@ -47,7 +48,9 @@ var sf = function() {
       loadPianoSoundFont : function(dirname) {
         return function() {
           sf.establishAudioContext();
-          return sf._loadPianoSoundFont (dirname);
+          if (sf.context) {
+            return sf._loadPianoSoundFont (dirname);
+          }
         }
        },
        _loadPianoSoundFont : function (dirname) {
@@ -73,7 +76,9 @@ var sf = function() {
       loadRemoteSoundFont : function(instrument) {
         return function() {
            sf.establishAudioContext();
-           return sf._loadRemoteSoundFont (instrument);
+           if (sf.context) {
+             return sf._loadRemoteSoundFont (instrument);
+           }
          }
        },
        _loadRemoteSoundFont : function (instrument) {
