@@ -35,7 +35,7 @@ var sf = function() {
       },
       /* Get the current time from the audio context */
       getCurrentTime : function() {
-         establishAudioContext();
+         sf.establishAudioContext();
          if (sf.context) {
            return sfcontext.currentTime;
          }
@@ -46,7 +46,7 @@ var sf = function() {
       /* load and decode the piano soundfont from the local server */
       loadPianoSoundFont : function(dirname) {
         return function() {
-          establishAudioContext();
+          sf.establishAudioContext();
           return sf._loadPianoSoundFont (dirname);
         }
        },
@@ -72,7 +72,7 @@ var sf = function() {
       /* load and decode the soundfont from the reomte server */
       loadRemoteSoundFont : function(instrument) {
         return function() {
-           establishAudioContext();
+           sf.establishAudioContext();
            return sf._loadRemoteSoundFont (instrument);
          }
        },
