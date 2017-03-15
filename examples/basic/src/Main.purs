@@ -2,7 +2,7 @@ module Main where
 
 import Prelude
 import Audio.SoundFont (AUDIO, LOADFONT,MidiNote,
-                   getAudioContext, canPlayOgg, isWebAudioEnabled, getCurrentTime,
+                   canPlayOgg, isWebAudioEnabled, getCurrentTime,
                    loadPianoSoundFont, loadRemoteSoundFont, playNote, playNotes)
 import Control.Monad.Eff (Eff)
 import Control.Monad.Eff.Console (CONSOLE, log)
@@ -43,14 +43,13 @@ main :: forall e.
           )
           TimeoutId
 main = do
-    context <- getAudioContext
     playsOgg <- canPlayOgg
     log ("can I play OGG: " <> show playsOgg)
     audioEnabled <- isWebAudioEnabled
     log ("can I play web-audio: " <> show audioEnabled)
-    let time = getCurrentTime context
+    let time = getCurrentTime
     log ("current time in audio context: " <> show time)
-    loaded <- loadPianoSoundFont context "soundfonts"
+    loaded <- loadPianoSoundFont "soundfonts"
     log ("piano soundfonts loaded: " <> show loaded)
     -- the soundfont loads asynchronously so wait for it to load before we play
     setTimeout 1000 do
@@ -66,7 +65,7 @@ main = do
 
     -- the remote soundfonts take much longer to load
     setTimeout 2000 do
-      loaded1 <- loadRemoteSoundFont context "marimba"
+      loaded1 <- loadRemoteSoundFont "marimba"
       log ("remote soundfonts loaded: " <> show loaded1)
     setTimeout 8000 do
       played1 <- playNote noteSample1

@@ -1,11 +1,9 @@
 module Audio.SoundFont
-  ( AudioContext
-  , AUDIO
+  ( AUDIO
   , LOADFONT
   , MidiNote
   , canPlayOgg
   , isWebAudioEnabled
-  , getAudioContext
   , getCurrentTime
   , loadPianoSoundFont
   , loadRemoteSoundFont
@@ -19,8 +17,6 @@ import Data.Maybe (fromMaybe)
 import Data.Array (head, reverse)
 import Control.Monad.Eff (Eff)
 
--- |  Audio Context
-foreign import data AudioContext :: *
 
 -- | Audio Effect
 foreign import data AUDIO :: !
@@ -44,18 +40,14 @@ foreign import canPlayOgg
 foreign import isWebAudioEnabled
   :: forall eff. (Eff (au :: AUDIO | eff) Boolean)
 
--- | get the Audio Context
-foreign import getAudioContext
-  :: forall eff. (Eff (au :: AUDIO | eff) AudioContext)
-
 -- |  Get the audio context's current time
-foreign import getCurrentTime :: AudioContext -> Number
+foreign import getCurrentTime :: Number
 
 -- | load a piano soundfont from the local server
-foreign import loadPianoSoundFont :: forall eff. AudioContext -> String -> Eff (loadSoundFont :: LOADFONT | eff) Boolean
+foreign import loadPianoSoundFont :: forall eff. String -> Eff (loadSoundFont :: LOADFONT | eff) Boolean
 
 -- | load a soundfont for a particular instrument from the remote Gleitz Github server
-foreign import loadRemoteSoundFont :: forall eff. AudioContext -> String -> Eff (loadSoundFont :: LOADFONT | eff) Boolean
+foreign import loadRemoteSoundFont :: forall eff. String -> Eff (loadSoundFont :: LOADFONT | eff) Boolean
 
 -- | play a note asynchronously
 -- | return the duration of the note
