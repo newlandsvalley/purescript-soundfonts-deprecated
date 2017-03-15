@@ -3,6 +3,7 @@
   "private": true,
   "dependencies": {
     "purescript-soundfonts": "../../../purescript-soundfonts",
-    "purescript-js-timers": "^2.0.0"
+    "purescript-js-timers": "^2.0.0",
+    "purescript-console": "^2.0.0"
   }
 }

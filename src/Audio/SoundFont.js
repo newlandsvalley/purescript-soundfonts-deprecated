@@ -60,7 +60,7 @@ var sf = function() {
              extension = '-mp3.js';
            }
            Soundfont.nameToUrl = function (name) { return dir + name + extension }
-           Soundfont.loadBuffers(context, name)
+           Soundfont.loadBuffers(sf.context, name)
                .then(function (buffers) {
                  // console.log("buffers:", buffers);
                  sf.buffers = buffers;
@@ -76,7 +76,7 @@ var sf = function() {
        },
        _loadRemoteSoundFont : function (instrument) {
            Soundfont.nameToUrl = null;
-           Soundfont.loadBuffers(context, instrument)
+           Soundfont.loadBuffers(sf.context, instrument)
                .then(function (buffers) {
                  // console.log("buffers:", buffers);
                  sf.buffers = buffers;
@@ -91,7 +91,7 @@ var sf = function() {
           }
       },
       _playNote : function (midiNote) {
-          if ((sf.buffers) && (sf.context)) {
+          if (sf.buffers) {
             // console.log("playing buffer at time: " + midiNote.timeOffset + " with gain: " + midiNote.gain + " for note: " + midiNote.id)
             var buffer = sf.buffers[midiNote.id]
             var source = sf.context.createBufferSource();
