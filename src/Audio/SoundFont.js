@@ -49,7 +49,9 @@ var sf = function() {
         return function() {
           sf.establishAudioContext();
           if (sf.context) {
-            return sf._loadPianoSoundFont (dirname);
+            sf.buffers = [];
+            sf._loadPianoSoundFont (dirname);
+            return (sf.buffers.length > 0)
           }
         }
        },
@@ -69,7 +71,6 @@ var sf = function() {
                  // console.log("buffers:", buffers);
                  sf.buffers = buffers;
                  console.log("buffers:", sf.buffers);
-                 return true;
                })
       },
       /* load and decode the soundfont from the reomte server */
@@ -77,7 +78,9 @@ var sf = function() {
         return function() {
            sf.establishAudioContext();
            if (sf.context) {
-             return sf._loadRemoteSoundFont (instrument);
+             sf.buffers = [];
+             sf._loadRemoteSoundFont (instrument);
+             return (sf.buffers.length > 0)
            }
          }
        },

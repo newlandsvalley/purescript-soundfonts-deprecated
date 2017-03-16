@@ -36,7 +36,7 @@ main :: forall e.
         Eff
           ( au :: AUDIO
           , console :: CONSOLE
-          , loadSoundFont :: LOADFONT
+          , loadFont :: LOADFONT
           , timer :: TIMER
           , playNote :: AUDIO
           | e
