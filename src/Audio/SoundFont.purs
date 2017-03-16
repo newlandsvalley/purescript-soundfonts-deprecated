@@ -1,6 +1,5 @@
 module Audio.SoundFont
   ( AUDIO
-  , LOADFONT
   , MidiNote
   , canPlayOgg
   , isWebAudioEnabled
@@ -11,18 +10,15 @@ module Audio.SoundFont
   , playNotes
   ) where
 
-import Prelude (map, ($))
+import Prelude (Unit, map, ($))
 import Data.Traversable (sequenceDefault)
 import Data.Maybe (fromMaybe)
 import Data.Array (head, reverse)
 import Control.Monad.Eff (Eff)
-
+import Control.Monad.Aff (Aff, makeAff)
 
 -- | Audio Effect
 foreign import data AUDIO :: !
-
--- |  Load Font Effect
-foreign import data LOADFONT :: !
 
 -- | A Midi Note
 type MidiNote =
@@ -44,19 +40,27 @@ foreign import isWebAudioEnabled
 foreign import getCurrentTime
   :: forall eff. (Eff (au :: AUDIO | eff) Number)
 
--- | load a piano soundfont from the local server
-foreign import loadPianoSoundFont :: forall eff. String -> Eff (loadFont :: LOADFONT | eff) Boolean
+foreign import loadPianoSoundFontImpl :: forall e. String -> (Boolean -> Eff e Unit) -> Eff e Unit
 
--- | load a soundfont for a particular instrument from the remote Gleitz Github server
-foreign import loadRemoteSoundFont :: forall eff. String -> Eff (loadFont :: LOADFONT | eff) Boolean
+foreign import loadRemoteSoundFontImpl :: forall e. String -> (Boolean -> Eff e Unit) -> Eff e Unit
 
 -- | play a note asynchronously
 -- | return the duration of the note
-foreign import playNote :: forall eff. MidiNote -> Eff (playNote :: AUDIO | eff) Number
+foreign import playNote :: forall eff. MidiNote -> Eff (au :: AUDIO | eff) Number
+
+-- | load the piano soundfont from the local server
+loadPianoSoundFont :: forall e. String -> Aff e Boolean
+loadPianoSoundFont dir =
+  makeAff (\error success -> (loadPianoSoundFontImpl dir) success)
+
+-- | load a soundfont for a particular instrument from the remote Gleitz Github server
+loadRemoteSoundFont :: forall e. String -> Aff e Boolean
+loadRemoteSoundFont instrument =
+  makeAff (\error success -> (loadRemoteSoundFontImpl instrument) success)
 
 -- | play a bunch of notes asynchronously
 -- | return the duration of the phrase (i.e. that of the last note in the phrase)
-playNotes :: forall eff. Array MidiNote -> Eff (playNote :: AUDIO | eff) Number
+playNotes :: forall eff. Array MidiNote -> Eff (au :: AUDIO | eff) Number
 playNotes ns =
   let
     pns = map playNote ns

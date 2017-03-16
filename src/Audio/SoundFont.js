@@ -45,17 +45,18 @@ var sf = function() {
          }
       },
       /* load and decode the piano soundfont from the local server */
-      loadPianoSoundFont : function(dirname) {
-        return function() {
-          sf.establishAudioContext();
-          if (sf.context) {
-            sf.buffers = [];
-            sf._loadPianoSoundFont (dirname);
-            return (sf.buffers.length > 0)
+      loadPianoSoundFontImpl : function(dirname) {
+        return function (callback) {
+          return function() {
+            sf.establishAudioContext();
+            if (sf.context) {
+              sf.buffers = [];
+              sf._loadPianoSoundFont (dirname, callback);
+            }
           }
         }
        },
-       _loadPianoSoundFont : function (dirname) {
+       _loadPianoSoundFont : function (dirname, callback) {
            var name = 'acoustic_grand_piano';
            var dir = dirname + '/';
            var extension = null;
@@ -71,27 +72,29 @@ var sf = function() {
                  // console.log("buffers:", buffers);
                  sf.buffers = buffers;
                  console.log("buffers:", sf.buffers);
+                 callback(true)();
                })
       },
       /* load and decode the soundfont from the reomte server */
-      loadRemoteSoundFont : function(instrument) {
-        return function() {
-           sf.establishAudioContext();
-           if (sf.context) {
-             sf.buffers = [];
-             sf._loadRemoteSoundFont (instrument);
-             return (sf.buffers.length > 0)
-           }
-         }
+      loadRemoteSoundFontImpl : function(instrument) {
+        return function (callback) {
+          return function() {
+            sf.establishAudioContext();
+            if (sf.context) {
+              sf.buffers = [];
+              sf._loadRemoteSoundFont (instrument, callback);
+            }
+          }
+        }
        },
-       _loadRemoteSoundFont : function (instrument) {
+       _loadRemoteSoundFont : function (instrument, callback) {
            Soundfont.nameToUrl = null;
            Soundfont.loadBuffers(sf.context, instrument)
                .then(function (buffers) {
                  // console.log("buffers:", buffers);
                  sf.buffers = buffers;
                  console.log("buffers:", sf.buffers);
-                 return true;
+                 callback(true)();
                })
       },
       // play a midi note
@@ -130,6 +133,6 @@ var sf = function() {
 exports.isWebAudioEnabled = sf.isWebAudioEnabled;
 exports.canPlayOgg = sf.canPlayOgg;
 exports.getCurrentTime = sf.getCurrentTime;
-exports.loadPianoSoundFont = sf.loadPianoSoundFont;
-exports.loadRemoteSoundFont = sf.loadRemoteSoundFont;
+exports.loadPianoSoundFontImpl = sf.loadPianoSoundFontImpl;
+exports.loadRemoteSoundFontImpl = sf.loadRemoteSoundFontImpl;
 exports.playNote = sf.playNote;
