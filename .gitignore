@@ -6,5 +6,3 @@
 /.psc*
 /.psa*
 /dist/
-/src/Main.purs
-build.sh

@@ -45,7 +45,7 @@ foreign import loadPianoSoundFontImpl :: forall e. String -> (Boolean -> Eff e U
 foreign import loadRemoteSoundFontImpl :: forall e. String -> (Boolean -> Eff e Unit) -> Eff e Unit
 
 -- | play a note asynchronously
--- | return the duration of the note
+-- | return the (time offset + duration) of the note
 foreign import playNote :: forall eff. MidiNote -> Eff (au :: AUDIO | eff) Number
 
 -- | load the piano soundfont from the local server
@@ -59,7 +59,8 @@ loadRemoteSoundFont instrument =
   makeAff (\error success -> (loadRemoteSoundFontImpl instrument) success)
 
 -- | play a bunch of notes asynchronously
--- | return the duration of the phrase (i.e. that of the last note in the phrase)
+-- | return the duration of the phrase
+-- | (i.e. the time offset plus duration of the last note in the phrase)
 playNotes :: forall eff. Array MidiNote -> Eff (au :: AUDIO | eff) Number
 playNotes ns =
   let
@@ -67,7 +68,7 @@ playNotes ns =
   in
     map lastDuration (sequenceDefault pns)
 
--- | return the duration of the last note played from a sequence of notes
+-- | return the overall duration of the last note played from a sequence of notes
 lastDuration :: Array Number -> Number
 lastDuration fs =
   let

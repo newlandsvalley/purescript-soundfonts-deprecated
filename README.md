@@ -26,6 +26,6 @@ Furthermore, the Elm version allowed a tune to be paced properly in effect by ma
      
 ## Examples
 
-The examples directory contains a browser example of how the library might be used.
+The examples/basic directory contains a browser example of how the library might be used.
      
      

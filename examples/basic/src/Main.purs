@@ -1,12 +1,13 @@
 module Main where
 
 import Prelude
-import Audio.SoundFont (AUDIO, LOADFONT,MidiNote,
+import Audio.SoundFont (AUDIO, MidiNote,
                    canPlayOgg, isWebAudioEnabled, getCurrentTime,
                    loadPianoSoundFont, loadRemoteSoundFont, playNote, playNotes)
 import Control.Monad.Eff (Eff)
 import Control.Monad.Eff.Console (CONSOLE, log)
-import Control.Monad.Eff.Timer (TIMER, TimeoutId, setTimeout)
+import Control.Monad.Eff.Exception (EXCEPTION, throwException)
+import Control.Monad.Aff (runAff, later')
 
 
 note :: Int -> Number -> Number -> Number -> MidiNote
@@ -36,12 +37,10 @@ main :: forall e.
         Eff
           ( au :: AUDIO
           , console :: CONSOLE
-          , loadFont :: LOADFONT
-          , timer :: TIMER
-          , playNote :: AUDIO
+          , err :: EXCEPTION
           | e
           )
-          TimeoutId
+          Unit
 main = do
     playsOgg <- canPlayOgg
     log ("can I play OGG: " <> show playsOgg)
@@ -49,30 +48,29 @@ main = do
     log ("can I play web-audio: " <> show audioEnabled)
     time <- getCurrentTime
     log ("current time in audio context: " <> show time)
-    loaded <- loadPianoSoundFont "soundfonts"
-    log ("piano soundfonts loaded: " <> show loaded)
-    -- the soundfont loads asynchronously so wait for it to load before we play
-    setTimeout 1000 do
-      played1 <- playNote noteSample1
-      log ("note duration: " <> show played1)
-      played2 <- playNote noteSample2
-      log ("note duration: " <> show played2)
-      played3 <- playNote noteSample3
-      log ("notes duration: " <> show played3)
-      played4 <- playNotes notesSample
-      log ("notes duration: " <> show played4)
+    runAff throwException playSequence (loadPianoSoundFont "soundfonts")
+    -- delay loading the marimba until we think the first sequence has just about finished playing
+    let
+      delayedLoad = later' 3000 $ loadRemoteSoundFont "marimba"
+    runAff throwException playSequence delayedLoad
+    log "finished"
 
 
-    -- the remote soundfonts take much longer to load
-    setTimeout 2000 do
-      loaded1 <- loadRemoteSoundFont "marimba"
-      log ("remote soundfonts loaded: " <> show loaded1)
-    setTimeout 8000 do
-      played1 <- playNote noteSample1
-      log ("note duration: " <> show played1)
-      played2 <- playNote noteSample2
-      log ("note duration: " <> show played2)
-      played3 <- playNote noteSample3
-      log ("notes duration: " <> show played3)
-      played4 <- playNotes notesSample
-      log ("notes duration: " <> show played4)
+-- | play a sequence of notes on whatever instrument
+playSequence :: forall e. Boolean ->
+        Eff
+          ( au :: AUDIO
+          , console :: CONSOLE
+          | e
+          )
+          Unit
+playSequence loaded = do
+  log $ "fonts loaded: " <> show loaded
+  played1 <- playNote noteSample1
+  log ("note duration: " <> show played1)
+  played2 <- playNote noteSample2
+  log ("note duration: " <> show played2)
+  played3 <- playNote noteSample3
+  log ("notes duration: " <> show played3)
+  played4 <- playNotes notesSample
+  log ("notes duration: " <> show played4)
