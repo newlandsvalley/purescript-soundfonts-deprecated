@@ -14,11 +14,11 @@ import Prelude (Unit, map, ($))
 import Data.Traversable (sequenceDefault)
 import Data.Maybe (fromMaybe)
 import Data.Array (head, reverse)
-import Control.Monad.Eff (Eff)
+import Control.Monad.Eff (kind Effect, Eff)
 import Control.Monad.Aff (Aff, makeAff)
 
 -- | Audio Effect
-foreign import data AUDIO :: !
+foreign import data AUDIO :: Effect
 
 -- | A Midi Note
 type MidiNote =
