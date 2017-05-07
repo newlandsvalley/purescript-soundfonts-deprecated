@@ -7,8 +7,8 @@ import Audio.SoundFont (AUDIO, MidiNote,
 import Control.Monad.Eff (Eff)
 import Control.Monad.Eff.Console (CONSOLE, log)
 import Control.Monad.Eff.Exception (EXCEPTION, throwException)
-import Control.Monad.Aff (runAff, later')
-
+import Data.Time.Duration (Milliseconds(..))
+import Control.Monad.Aff (runAff, launchAff, delay)
 
 note :: Int -> Number -> Number -> Number -> MidiNote
 note id timeOffset duration gain =
@@ -33,14 +33,16 @@ notesSample =
  , note 71 3.0 1.5 1.0
  ]
 
+{- -}
 main :: forall e.
         Eff
           ( au :: AUDIO
           , console :: CONSOLE
-          , err :: EXCEPTION
+          , exception :: EXCEPTION
           | e
           )
           Unit
+{- -}
 main = do
     playsOgg <- canPlayOgg
     log ("can I play OGG: " <> show playsOgg)
@@ -48,11 +50,14 @@ main = do
     log ("can I play web-audio: " <> show audioEnabled)
     time <- getCurrentTime
     log ("current time in audio context: " <> show time)
-    runAff throwException playSequence (loadPianoSoundFont "soundfonts")
+    _ <- runAff throwException playSequence (loadPianoSoundFont "soundfonts")
     -- delay loading the marimba until we think the first sequence has just about finished playing
+    _ <- launchAff $ delay (Milliseconds 3000.0)
+    _ <- runAff throwException playSequence (loadRemoteSoundFont "marimba")
+    {-  purescript 0.10.7 version of Aff
     let
       delayedLoad = later' 3000 $ loadRemoteSoundFont "marimba"
-    runAff throwException playSequence delayedLoad
+    -}
     log "finished"
 
 
