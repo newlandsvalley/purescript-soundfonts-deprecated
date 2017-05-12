@@ -110,7 +110,8 @@ var sf = function() {
             var source = sf.context.createBufferSource();
             var gainNode = sf.context.createGain();
             var timeOn = sf.context.currentTime + midiNote.timeOffset;
-            var timeOff = sf.context.currentTime + midiNote.timeOffset + midiNote.duration;
+            // let the note ring for 10% more than it's alloted time to give a more legato feel
+            var timeOff = sf.context.currentTime + midiNote.timeOffset + (midiNote.duration * 1.1);
             gainNode.gain.value = midiNote.gain;
             source.buffer = buffer;
             source.connect(gainNode);

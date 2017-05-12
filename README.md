@@ -14,9 +14,7 @@ The description of a MIDI note is slightly different from the Elm version:
        , gain :: Number           -- the volume (between 0 and 1)
        }
        
-We now specify a duration for the note which will allow you to play staccato sequences (the Elm version, lacking this attribute, allowed each note to fade naturally, enforcing a sustained legato style).
-
-Furthermore, the Elm version allowed a tune to be paced properly in effect by making the note-playing functions synchronous.  Although web-audio produces its effects asynchronously, it was possible to do this by sleeping for the exact duration of the sequence. For the life of me, I've not managed to produce an effective non-blocking sleep function in PureScript.  However, the same result can be obtained with judicious use of the *timeOffset* and *duration* attributes.
+We now specify a duration for the note which will allow you to play staccato sequences (the Elm version, lacking this attribute, allowed each note to ring for a pre-alloted time and then to fade naturally, enforcing a sustained legato style which was awkward with a succession of short notes).  This version allows each note to 'ring' for 10% more than its alloted time.  This gives a legato feel, but still allows each note to be started accurately at tempo.  Purescript-aff now incorporates a [delay](https://github.com/slamdata/purescript-aff/blob/master/src/Control/Monad/Aff.purs) function and this can be used to pace the notes correctly.
 
 ## Build
 
