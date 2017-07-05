@@ -54,10 +54,6 @@ main = do
     -- delay loading the marimba until we think the first sequence has just about finished playing
     _ <- launchAff $ delay (Milliseconds 3000.0)
     _ <- runAff throwException playSequence (loadRemoteSoundFont "marimba")
-    {-  purescript 0.10.7 version of Aff
-    let
-      delayedLoad = later' 3000 $ loadRemoteSoundFont "marimba"
-    -}
     log "finished"
 
 

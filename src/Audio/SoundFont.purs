@@ -42,7 +42,7 @@ foreign import getCurrentTime
 
 foreign import loadPianoSoundFontImpl :: forall e. String -> (Boolean -> Eff e Unit) -> Eff e Unit
 
-foreign import loadRemoteSoundFontImpl :: forall e. String -> (Boolean -> Eff e Unit) -> Eff e Unit
+foreign import loadRemoteSoundFontImpl :: forall e. String -> Int -> (Boolean -> Eff e Unit) -> Eff e Unit
 
 -- | play a note asynchronously
 -- | return the (time offset + duration) of the note
@@ -54,9 +54,9 @@ loadPianoSoundFont dir =
   makeAff (\error success -> (loadPianoSoundFontImpl dir) success)
 
 -- | load a soundfont for a particular instrument from the remote Gleitz Github server
-loadRemoteSoundFont :: forall e. String -> Aff e Boolean
-loadRemoteSoundFont instrument =
-  makeAff (\error success -> (loadRemoteSoundFontImpl instrument) success)
+loadRemoteSoundFont :: forall e. String -> Int -> Aff e Boolean
+loadRemoteSoundFont instrument channel =
+  makeAff (\error success -> (loadRemoteSoundFontImpl instrument channel) success)
 
 -- | play a bunch of notes asynchronously
 -- | return the duration of the phrase

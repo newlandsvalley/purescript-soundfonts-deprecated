@@ -77,22 +77,24 @@ var sf = function() {
       },
       /* load and decode the soundfont from the reomte server */
       loadRemoteSoundFontImpl : function(instrument) {
-        return function (callback) {
-          return function() {
-            sf.establishAudioContext();
-            if (sf.context) {
-              sf.buffers[0] = [];
-              sf._loadRemoteSoundFont (instrument, callback);
+        return function (channel) {
+          return function (callback) {
+            return function() {
+              sf.establishAudioContext();
+              if (sf.context) {
+                sf.buffers[channel] = [];
+                sf._loadRemoteSoundFont (instrument, callback);
+              }
             }
           }
         }
        },
-       _loadRemoteSoundFont : function (instrument, callback) {
+       _loadRemoteSoundFont : function (instrument, channel, callback) {
            Soundfont.nameToUrl = null;
            Soundfont.loadBuffers(sf.context, instrument)
                .then(function (buffers) {
                  // console.log("buffers:", buffers);
-                 sf.buffers[0] = buffers;
+                 sf.buffers[channel] = buffers;
                  console.log("buffers:", sf.buffers[0]);
                  callback(true)();
                })
