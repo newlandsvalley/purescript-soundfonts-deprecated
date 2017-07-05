@@ -5,10 +5,10 @@ var sf = function() {
 
   var buffers = Create2DArray (10);
 
-  function Create2DArray(rows) {
-    var arr = [];
+  function Create2DArray (insts) {
+    var arr = new Array(insts);
 
-    for (var i=0;i<rows;i++) {
+    for (var i=0; i<insts; i++) {
        arr[i] = [];
     }
 
