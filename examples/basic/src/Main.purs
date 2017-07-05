@@ -44,16 +44,24 @@ main :: forall e.
           Unit
 {- -}
 main = do
+    {-  purescript 0.10.7 version of Aff
+    let
+      delayedLoad = later' 3000 $ loadRemoteSoundFont "marimba"
+    -}
     playsOgg <- canPlayOgg
     log ("can I play OGG: " <> show playsOgg)
     audioEnabled <- isWebAudioEnabled
     log ("can I play web-audio: " <> show audioEnabled)
+    {-  purescript 0.10.7 version of Aff
+    let
+      delayedLoad = later' 3000 $ loadRemoteSoundFont "marimba"
+    -}
     time <- getCurrentTime
     log ("current time in audio context: " <> show time)
     _ <- runAff throwException playSequence (loadPianoSoundFont "soundfonts")
     -- delay loading the marimba until we think the first sequence has just about finished playing
     _ <- launchAff $ delay (Milliseconds 3000.0)
-    _ <- runAff throwException playSequence (loadRemoteSoundFont "marimba")
+    _ <- runAff throwException playSequence (loadRemoteSoundFont "marimba" 0)
     log "finished"
 
 

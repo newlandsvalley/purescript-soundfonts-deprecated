@@ -48,12 +48,13 @@ foreign import loadRemoteSoundFontImpl :: forall e. String -> Int -> (Boolean ->
 -- | return the (time offset + duration) of the note
 foreign import playNote :: forall eff. MidiNote -> Eff (au :: AUDIO | eff) Number
 
--- | load the piano soundfont from the local server
+-- | load the piano soundfont from the local server to channel 0
 loadPianoSoundFont :: forall e. String -> Aff e Boolean
 loadPianoSoundFont dir =
   makeAff (\error success -> (loadPianoSoundFontImpl dir) success)
 
 -- | load a soundfont for a particular instrument from the remote Gleitz Github server
+-- | to the specified channel
 loadRemoteSoundFont :: forall e. String -> Int -> Aff e Boolean
 loadRemoteSoundFont instrument channel =
   makeAff (\error success -> (loadRemoteSoundFontImpl instrument channel) success)
