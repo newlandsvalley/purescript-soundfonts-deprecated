@@ -3,17 +3,9 @@
 
 var sf = function() {
 
-  var buffers = Create2DArray (10);
-
-  function Create2DArray (insts) {
-    var arr = new Array(insts);
-
-    for (var i=0; i<insts; i++) {
-       arr[i] = [];
-    }
-
-    return arr;
-  }
+  var buffers = new Array ( );
+  buffers[0] = [];
+  buffers[1] = [];
 
   var context = null;
 
