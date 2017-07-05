@@ -1,11 +1,10 @@
 "use strict";
 
 
+
 var sf = function() {
 
-  var buffers = new Array ( );
-  buffers[0] = [];
-  buffers[1] = [];
+  var buffers = [];
 
   var context = null;
 
@@ -52,7 +51,7 @@ var sf = function() {
           return function() {
             sf.establishAudioContext();
             if (sf.context) {
-              sf.buffers[0] = [];
+              sf.buffers = [];
               sf._loadPianoSoundFont (dirname, callback);
             }
           }
@@ -72,32 +71,30 @@ var sf = function() {
            Soundfont.loadBuffers(sf.context, name)
                .then(function (buffers) {
                  // console.log("buffers:", buffers);
-                 sf.buffers[0] = buffers;
-                 console.log("buffers:", sf.buffers[0]);
+                 sf.buffers = buffers;
+                 console.log("buffers:", sf.buffers);
                  callback(true)();
                })
       },
       /* load and decode the soundfont from the reomte server */
       loadRemoteSoundFontImpl : function(instrument) {
-        return function (channel) {
-          return function (callback) {
-            return function() {
-              sf.establishAudioContext();
-              if (sf.context) {
-                sf.buffers[channel] = [];
-                sf._loadRemoteSoundFont (instrument, callback);
-              }
+        return function (callback) {
+          return function() {
+            sf.establishAudioContext();
+            if (sf.context) {
+              sf.buffers = [];
+              sf._loadRemoteSoundFont (instrument, callback);
             }
           }
         }
        },
-       _loadRemoteSoundFont : function (instrument, channel, callback) {
+       _loadRemoteSoundFont : function (instrument, callback) {
            Soundfont.nameToUrl = null;
            Soundfont.loadBuffers(sf.context, instrument)
                .then(function (buffers) {
                  // console.log("buffers:", buffers);
-                 sf.buffers[channel] = buffers;
-                 console.log("buffers:", sf.buffers[0]);
+                 sf.buffers = buffers;
+                 console.log("buffers:", sf.buffers);
                  callback(true)();
                })
       },
@@ -108,11 +105,9 @@ var sf = function() {
           }
       },
       _playNote : function (midiNote) {
-          if (sf.buffers[0]) {
+          if (sf.buffers) {
             // console.log("playing buffer at time: " + midiNote.timeOffset + " with gain: " + midiNote.gain + " for note: " + midiNote.id)
-            var channel = 0
-            var voice = sf.buffers[channel]
-            var buffer = voice[midiNote.id]
+            var buffer = sf.buffers[midiNote.id]
             var source = sf.context.createBufferSource();
             var gainNode = sf.context.createGain();
             var timeOn = sf.context.currentTime + midiNote.timeOffset;

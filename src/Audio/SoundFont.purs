@@ -10,6 +10,7 @@ module Audio.SoundFont
   , playNotes
   ) where
 
+
 import Prelude (Unit, map, ($))
 import Data.Traversable (sequenceDefault)
 import Data.Maybe (fromMaybe)
@@ -42,22 +43,21 @@ foreign import getCurrentTime
 
 foreign import loadPianoSoundFontImpl :: forall e. String -> (Boolean -> Eff e Unit) -> Eff e Unit
 
-foreign import loadRemoteSoundFontImpl :: forall e. String -> Int -> (Boolean -> Eff e Unit) -> Eff e Unit
+foreign import loadRemoteSoundFontImpl :: forall e. String -> (Boolean -> Eff e Unit) -> Eff e Unit
 
 -- | play a note asynchronously
 -- | return the (time offset + duration) of the note
 foreign import playNote :: forall eff. MidiNote -> Eff (au :: AUDIO | eff) Number
 
--- | load the piano soundfont from the local server to channel 0
+-- | load the piano soundfont from the local server
 loadPianoSoundFont :: forall e. String -> Aff e Boolean
 loadPianoSoundFont dir =
   makeAff (\error success -> (loadPianoSoundFontImpl dir) success)
 
 -- | load a soundfont for a particular instrument from the remote Gleitz Github server
--- | to the specified channel
-loadRemoteSoundFont :: forall e. String -> Int -> Aff e Boolean
-loadRemoteSoundFont instrument channel =
-  makeAff (\error success -> (loadRemoteSoundFontImpl instrument channel) success)
+loadRemoteSoundFont :: forall e. String -> Aff e Boolean
+loadRemoteSoundFont instrument =
+  makeAff (\error success -> (loadRemoteSoundFontImpl instrument) success)
 
 -- | play a bunch of notes asynchronously
 -- | return the duration of the phrase
