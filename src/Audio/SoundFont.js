@@ -50,7 +50,7 @@ var sf = function() {
           return function() {
             sf.establishAudioContext();
             if (sf.context) {
-              sf.buffers = [];
+              sf.buffers[0] = [];
               sf._loadPianoSoundFont (dirname, callback);
             }
           }
@@ -70,8 +70,8 @@ var sf = function() {
            Soundfont.loadBuffers(sf.context, name)
                .then(function (buffers) {
                  // console.log("buffers:", buffers);
-                 sf.buffers = buffers;
-                 console.log("buffers:", sf.buffers);
+                 sf.buffers[0] = buffers;
+                 console.log("buffers:", sf.buffers[0]);
                  callback(true)();
                })
       },
@@ -81,7 +81,7 @@ var sf = function() {
           return function() {
             sf.establishAudioContext();
             if (sf.context) {
-              sf.buffers = [];
+              sf.buffers[0] = [];
               sf._loadRemoteSoundFont (instrument, callback);
             }
           }
@@ -92,8 +92,8 @@ var sf = function() {
            Soundfont.loadBuffers(sf.context, instrument)
                .then(function (buffers) {
                  // console.log("buffers:", buffers);
-                 sf.buffers = buffers;
-                 console.log("buffers:", sf.buffers);
+                 sf.buffers[0] = buffers;
+                 console.log("buffers:", sf.buffers[0]);
                  callback(true)();
                })
       },
@@ -104,9 +104,11 @@ var sf = function() {
           }
       },
       _playNote : function (midiNote) {
-          if (sf.buffers) {
+          if (sf.buffers[0]) {
             // console.log("playing buffer at time: " + midiNote.timeOffset + " with gain: " + midiNote.gain + " for note: " + midiNote.id)
-            var buffer = sf.buffers[midiNote.id]
+            var channel = 0
+            var voice = sf.buffers[channel]
+            var buffer = voice[midiNote.id]
             var source = sf.context.createBufferSource();
             var gainNode = sf.context.createGain();
             var timeOn = sf.context.currentTime + midiNote.timeOffset;
