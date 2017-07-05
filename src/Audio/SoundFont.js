@@ -3,9 +3,7 @@
 
 var sf = function() {
 
-  var buffers = new Array ( );
-  buffers[0] = [];
-  buffers[1] = [];
+  var buffers = [[],[],[],[],[]];
 
   var context = null;
 
