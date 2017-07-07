@@ -1,14 +1,15 @@
 purescript-soundfont
 ====================
 
-This is a PureScript wrapper for danigb's soundfont project: [soundfont-player](https://github.com/danigb/soundfont-player). It is, to a large extent ported from the two previous Elm wrappers of the same library.  It loads soundfonts taken from Benjamin Gleitzman's package of [pre-rendered sound fonts](https://github.com/gleitz/midi-js-soundfonts). It then provides functions which allow you to play either an individual note or a sequence of notes.
+This is a PureScript wrapper for danigb's soundfont project: [soundfont-player](https://github.com/danigb/soundfont-player). It is, to a large extent ported from the two previous Elm wrappers of the same library.  It loads soundfonts taken from Benjamin Gleitzman's package of [pre-rendered sound fonts](https://github.com/gleitz/midi-js-soundfonts). It then provides functions which allow you to play either an individual note or a sequence of notes. It is entirely monophonic - only one instrument soundfont may reside in memory at any time.
 
 Soundfonts can either be loaded from a local server or from Benjamin Gleitzman's github server.
 
 The description of a MIDI note is slightly different from the Elm version:
      
      type MidiNote =
-       { id  :: Int               -- the MIDI pitch number
+       { channel :: Int           -- the MIDI channel (ignored)
+       , id  :: Int               -- the MIDI pitch number
        , timeOffset :: Number     -- the time delay in seconds before the note is played
        , duration :: Number       -- the duration of the note
        , gain :: Number           -- the volume (between 0 and 1)
@@ -22,8 +23,12 @@ We now specify a duration for the note which will allow you to play staccato seq
      pulp install
      pulp build
      
-## Examples
+## Example
 
-The examples/basic directory contains a browser example of how the library might be used.
+To build an example that runs in the browser:
+
+     ./buildExample.sh
+
+and then navigate to /examples/basic/dist/index.html
      
      

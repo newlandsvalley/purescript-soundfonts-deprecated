@@ -10,30 +10,29 @@ import Control.Monad.Eff.Exception (EXCEPTION, throwException)
 import Data.Time.Duration (Milliseconds(..))
 import Control.Monad.Aff (runAff, launchAff, delay)
 
-note :: Int -> Number -> Number -> Number -> MidiNote
-note id timeOffset duration gain =
-  { id : id, timeOffset : timeOffset, duration : duration, gain : gain }
+note :: Int -> Int -> Number -> Number -> Number -> MidiNote
+note channel id timeOffset duration gain =
+  { channel : channel, id : id, timeOffset : timeOffset, duration : duration, gain : gain }
 
 noteSample1 :: MidiNote
-noteSample1 = note 60 0.0 0.3 1.0
+noteSample1 = note 0 60 0.0 0.3 1.0
 
 noteSample2 :: MidiNote
-noteSample2 = note 62 0.4 0.3 1.0
+noteSample2 = note 0 62 0.4 0.3 1.0
 
 noteSample3 :: MidiNote
-noteSample3 = note 64 0.8 0.2 1.0
+noteSample3 = note 0 64 0.8 0.2 1.0
 
 notesSample :: Array MidiNote
 notesSample =
- [ note 60 1.0 0.5 1.0
- , note 62 1.5 0.5 1.0
- , note 64 2.0 0.5 1.0
- , note 65 2.5 0.5 1.0
- , note 67 3.0 1.5 1.0
- , note 71 3.0 1.5 1.0
+ [ note 0 60 1.0 0.5 1.0
+ , note 0 62 1.5 0.5 1.0
+ , note 0 64 2.0 0.5 1.0
+ , note 0 65 2.5 0.5 1.0
+ , note 0 67 3.0 1.5 1.0
+ , note 0 71 3.0 1.5 1.0
  ]
 
-{- -}
 main :: forall e.
         Eff
           ( au :: AUDIO
@@ -42,31 +41,19 @@ main :: forall e.
           | e
           )
           Unit
-{- -}
 main = do
-    {-  purescript 0.10.7 version of Aff
-    let
-      delayedLoad = later' 3000 $ loadRemoteSoundFont "marimba"
-    -}
     playsOgg <- canPlayOgg
     log ("can I play OGG: " <> show playsOgg)
     audioEnabled <- isWebAudioEnabled
     log ("can I play web-audio: " <> show audioEnabled)
-    {-  purescript 0.10.7 version of Aff
-    let
-      delayedLoad = later' 3000 $ loadRemoteSoundFont "marimba"
-    -}
     time <- getCurrentTime
     log ("current time in audio context: " <> show time)
     _ <- runAff throwException playSequence (loadPianoSoundFont "soundfonts")
     -- delay loading the marimba until we think the first sequence has just about finished playing
+    -- note this is wrrong - delay only works within Aff
     _ <- launchAff $ delay (Milliseconds 3000.0)
     _ <- runAff throwException playSequence (loadRemoteSoundFont "marimba")
-    {-  purescript 0.10.7 version of Aff
-    let
-      delayedLoad = later' 3000 $ loadRemoteSoundFont "marimba"
-    -}
-
+    log "finished"
 
 -- | play a sequence of notes on whatever instrument
 playSequence :: forall e. Boolean ->

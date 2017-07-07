@@ -1,9 +1,0 @@
-{
-  "name": "keyboard",
-  "private": true,
-  "dependencies": {
-    "purescript-soundfonts": "../../../purescript-soundfonts",
-    "purescript-js-timers": "^3.0.0",
-    "purescript-console": "^3.0.0"
-  }
-}
