@@ -20,7 +20,7 @@ We now specify a duration for the note which will allow you to play staccato seq
 ## Build
 
      npm install -g pulp purescript
-     pulp install
+     bower install
      pulp build
      
 ## Example
