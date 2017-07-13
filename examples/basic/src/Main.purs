@@ -1,7 +1,7 @@
 module Main where
 
 import Prelude
-import Audio.SoundFont (AUDIO, MidiNote,
+import Audio.SoundFont (AUDIO, MidiNote, LoadResult,
                    canPlayOgg, isWebAudioEnabled, getCurrentTime,
                    loadPianoSoundFont, loadRemoteSoundFont, playNote, playNotes)
 import Control.Monad.Eff (Eff)
@@ -56,15 +56,15 @@ main = do
     log "finished"
 
 -- | play a sequence of notes on whatever instrument
-playSequence :: forall e. Boolean ->
+playSequence :: forall e. LoadResult ->
         Eff
           ( au :: AUDIO
           , console :: CONSOLE
           | e
           )
           Unit
-playSequence loaded = do
-  log $ "fonts loaded: " <> show loaded
+playSequence loadResult = do
+  log $ loadResult.instrument <> " font loaded to channel " <> show loadResult.channel
   played1 <- playNote noteSample1
   log ("note duration: " <> show played1)
   played2 <- playNote noteSample2

@@ -73,7 +73,8 @@ var sf = function() {
                  // console.log("buffers:", buffers);
                  sf.buffers = buffers;
                  console.log("buffers:", sf.buffers);
-                 callback(true)();
+                 // callback(true)();
+                 callback({ instrument : 'acoustic_grand_piano', channel: 0 })();
                })
       },
       /* load and decode the soundfont from the reomte server */
@@ -95,7 +96,8 @@ var sf = function() {
                  // console.log("buffers:", buffers);
                  sf.buffers = buffers;
                  console.log("buffers:", sf.buffers);
-                 callback(true)();
+                 // callback(true)();
+                 callback({ instrument : instrument, channel: 0 })();
                })
       },
       // play a midi note

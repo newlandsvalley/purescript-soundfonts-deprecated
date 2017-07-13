@@ -1,6 +1,7 @@
 module Audio.SoundFont
   ( AUDIO
   , MidiNote
+  , LoadResult
   , canPlayOgg
   , isWebAudioEnabled
   , getCurrentTime
@@ -23,11 +24,17 @@ foreign import data AUDIO :: Effect
 
 -- | A Midi Note
 type MidiNote =
-  { channel :: Int           -- the MIDI channel (ignored)
+  { channel :: Int           -- the MIDI channel (ignored - always effectively 0)
   , id  :: Int               -- the MIDI pitch number
   , timeOffset :: Number     -- the time delay in seconds before the note is played
   , duration :: Number       -- the duration of the note
   , gain :: Number           -- the volume (between 0 and 1)
+  }
+
+-- | The result of loading an instrument soundfont
+type LoadResult =
+  { instrument :: String     -- the instrument name
+  , channel :: Int           -- the MIDI channel (position in instrument soundfont array)
   }
 
 -- | can the browser play ogg format ?
@@ -42,21 +49,21 @@ foreign import isWebAudioEnabled
 foreign import getCurrentTime
   :: forall eff. (Eff (au :: AUDIO | eff) Number)
 
-foreign import loadPianoSoundFontImpl :: forall e. String -> (Boolean -> Eff e Unit) -> Eff e Unit
+foreign import loadPianoSoundFontImpl :: forall e. String -> (LoadResult -> Eff e Unit) -> Eff e Unit
 
-foreign import loadRemoteSoundFontImpl :: forall e. String -> (Boolean -> Eff e Unit) -> Eff e Unit
+foreign import loadRemoteSoundFontImpl :: forall e. String -> (LoadResult -> Eff e Unit) -> Eff e Unit
 
 -- | play a note asynchronously
 -- | return the (time offset + duration) of the note
 foreign import playNote :: forall eff. MidiNote -> Eff (au :: AUDIO | eff) Number
 
 -- | load the piano soundfont from the local server
-loadPianoSoundFont :: forall e. String -> Aff e Boolean
+loadPianoSoundFont :: forall e. String -> Aff e LoadResult
 loadPianoSoundFont dir =
   makeAff (\error success -> (loadPianoSoundFontImpl dir) success)
 
 -- | load a soundfont for a particular instrument from the remote Gleitz Github server
-loadRemoteSoundFont :: forall e. String -> Aff e Boolean
+loadRemoteSoundFont :: forall e. String -> Aff e LoadResult
 loadRemoteSoundFont instrument =
   makeAff (\error success -> (loadRemoteSoundFontImpl instrument) success)
 
