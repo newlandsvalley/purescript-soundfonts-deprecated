@@ -1,5 +1,7 @@
-purescript-soundfont
-====================
+purescript-soundfonts
+=====================
+
+__Deprecated in favour of purescript-polyphonic-soundfonts__
 
 This is a PureScript wrapper for danigb's soundfont project: [soundfont-player](https://github.com/danigb/soundfont-player). It is, to a large extent ported from the two previous Elm wrappers of the same library.  It loads soundfonts taken from Benjamin Gleitzman's package of [pre-rendered sound fonts](https://github.com/gleitz/midi-js-soundfonts). It then provides functions which allow you to play either an individual note or a sequence of notes. It is entirely monophonic - only one instrument soundfont may reside in memory at any time.
 
